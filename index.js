@@ -4,12 +4,12 @@ const path = require('path');
 
 // PostgreSQL client setup
 const client = new Client({
-  user: 'your_username',
-  host: 'localhost',
-  database: 'your_database',
-  password: 'your_password',
-  port: 5432, // default PostgreSQL port
-});
+    user: 'your_username',
+    host: 'localhost',
+    database: 'your_database',
+    password: 'your_password',
+    port: 5432, // default PostgreSQL port
+  });
 
 async function exportTablesToJson() {
   try {
@@ -34,8 +34,7 @@ async function exportTablesToJson() {
     for (const table of tables) {
       console.log(`Exporting table: ${table}`);
 
-      // Fetch all rows from the current table and convert to JSON
-      const tableDataRes = await client.query(`SELECT json_agg(row_to_json(t)) FROM ${table} t`);
+      const tableDataRes = await client.query(`SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM "${table}") t`);
       const jsonData = tableDataRes.rows[0].json_agg;
 
       if (jsonData) {
